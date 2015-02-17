@@ -1,4 +1,4 @@
-import time
+import time,sys
 import Tkinter as tk
 from random import randint
 
@@ -147,6 +147,8 @@ def aStar():
         closed_list = []
         while True:
             if len(open_list) == 0 :
+                print "NO PATH"
+                sys.exit()
                 return False
 
             cur_cell = min(open_list,key=open_list.get)
@@ -200,7 +202,6 @@ def draw_path():
             for cell in row:
                 if cell.changed:
                     c.create_rectangle(cell.x*cell_w,cell.y*cell_h,(cell.x+1)*cell_w,(cell.y+1)*cell_h,fill=cell.color)
-
         
 
 if __name__ == "__main__":
