@@ -1,0 +1,1 @@
+This is the A\* algorithm coded in python and using the Tkinter GUI library in order to visualize the path that is found. Please click once to set the start location and once more to set the end location
