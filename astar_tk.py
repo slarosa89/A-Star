@@ -176,7 +176,7 @@ def aStar():
     if not matrix.solved:
         root.after(1000,aStar)
     else:
-        draw_path()
+        slowdown(draw_path())
 
 def draw_path():
     backwards_path = []
@@ -192,7 +192,13 @@ def draw_path():
             for cell in row:
                 if cell.walked_on:
                     c.create_rectangle(cell.x*cell_w,cell.y*cell_h,(cell.x+1)*cell_w,(cell.y+1)*cell_h,fill=cell.color)
-        
+                    yield 1
+
+def slowdown(iterator):
+    try:
+        root.after(iterator.next(),slowdown,iterator)
+    except StopIteration:
+        pass
 
 if __name__ == "__main__":
     win_width = 500
