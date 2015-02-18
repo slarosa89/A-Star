@@ -30,8 +30,10 @@ class Cell():
         for n in [(-1,0),(1,0),(0,-1),(0,1),(-1,-1),(1,-1),(-1,1),(1,1)]:
             nx,ny = n
             yield matrix[ny+self.y][nx+self.x]
+
     def cord(self):
         return (self.y,self.x)
+
 class Matrix():
     def __init__(self, rows, cols):
         self.rows = rows
@@ -54,17 +56,12 @@ class Matrix():
                     cell.wall = True
                 elif not any([cell.start,cell.end,cell.wall]) and randint(1,11)>8:
                     cell.wall = True
-        self.update()
+                cell.update()
 
     def draw(self):
         for row in matrix:
             for cell in row:
                 c.create_rectangle(cell.x*cell_w,cell.y*cell_h,(cell.x+1)*cell_w,(cell.y+1)*cell_h,fill=cell.color)
-
-    def update(self):
-        for row in matrix:
-            for cell in row:
-                cell.update()
 
     def __getitem__(self, key):
         return self.matrix[key]
@@ -187,12 +184,9 @@ def draw_path():
 
     for cell in reversed(backwards_path):
         cell.walked_on = True
-        matrix.update()
-        for row in matrix:
-            for cell in row:
-                if cell.walked_on:
-                    c.create_rectangle(cell.x*cell_w,cell.y*cell_h,(cell.x+1)*cell_w,(cell.y+1)*cell_h,fill=cell.color)
-                    yield 1
+        cell.update()
+        c.create_rectangle(cell.x*cell_w,cell.y*cell_h,(cell.x+1)*cell_w,(cell.y+1)*cell_h,fill=cell.color)
+        yield 100
 
 def slowdown(iterator):
     try:
