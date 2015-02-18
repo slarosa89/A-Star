@@ -78,20 +78,16 @@ def onClick(event):
         if not matrix[py][px].wall:
             matrix[py][px].start = True
             matrix.start_set = True
-            #matrix.update()
             matrix.start = matrix[py][px]
             matrix.start.update()
             c.create_rectangle(matrix.start.x*cell_w,matrix.start.y*cell_h,(matrix.start.x+1)*cell_w,(matrix.start.y+1)*cell_h,fill=matrix.start.color)
-            #matrix.draw()
     elif not matrix.end_set:
         if not matrix[py][px].wall and not matrix[py][px].start:
             matrix[py][px].end = True
             matrix.end_set = True
-            #matrix.update()
             matrix.end = matrix[py][px]
             matrix.end.update()
             c.create_rectangle(matrix.end.x*cell_w,matrix.end.y*cell_h,(matrix.end.x+1)*cell_w,(matrix.end.y+1)*cell_h,fill=matrix.end.color)
-            #matrix.draw()
 
 def check_cell(next_cell):
     y,x = next_cell.cord()
@@ -119,10 +115,6 @@ def get_H(cur_cell,target_cell):
     x_diff = abs(tx-cx)
     y_diff = abs(ty-cy)
     return (x_diff+y_diff)*10
-
-def get_parent_G(parent):
-    py,px = parent.cord()
-    return matrix[py][px].G
 
 def blocked_corner(cur_cell,neighbor):
     y,x = cur_cell.cord()
