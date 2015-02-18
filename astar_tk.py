@@ -28,7 +28,7 @@ class Cell():
             self.color = "black"
         
     def neighbors(self):
-        for n in [(-1,0),(1,0),(0,-1),(0,1),(-1,-1),(1,-1),(-1,1),(1,1)]:
+        for n in neighbor_cords():
             nx,ny = n
             yield matrix[ny+self.y][nx+self.x]
 
@@ -96,15 +96,21 @@ def check_cell(next_cell):
         return False
     return True
 
+def neighbor_cords():
+    for y in xrange(-1,2):
+        for x in xrange(-1,2):
+            if not (y,x) == (0,0):
+                yield (y,x)
+
 def get_G(cur_cell,next_cell):
     cy,cx = cur_cell.cord()
     ny,nx = next_cell.cord()
-    for dy,dx in [(0,1),(1,0),(-1,0),(0,-1)]:
+    for dy,dx in neighbor_cords():
         if cy+dy == ny and cx+dx == nx:
-            return 10
-    for dy,dx in [(-1,-1),(-1,1),(1,-1),(1,1)]:
-        if cy+dy == ny and cx+dx == nx:
-            return 14
+            if abs(dy+dx) == 1:
+                return 10
+            else:
+                return 14
 
 def get_H(cur_cell,target_cell):
     cy,cx = cur_cell.cord()
