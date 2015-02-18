@@ -16,6 +16,7 @@ class Cell():
         self.end = False
         self.wall = False
 
+
     def update(self):
         if self.walked_on:
             self.color = "yellow"
