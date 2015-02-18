@@ -18,21 +18,22 @@ class Cell():
 
 
     def update(self):
-        if self.walked_on:
-            self.color = "yellow"
         if self.start:
             self.color = "green"
-        if self.end:
+        elif self.walked_on:
+            self.color = "yellow"
+        elif self.end:
             self.color = "red"
-        if self.wall:
+        elif self.wall:
             self.color = "black"
-        
+        else:
+            self.color = "white"
+
     def neighbors(self):
-        for n in neighbor_cords():
-            nx,ny = n
+        for nx, ny in neighbor_coords():
             yield matrix[ny+self.y][nx+self.x]
 
-    def cord(self):
+    def coords(self):
         return (self.y,self.x)
 
 class Matrix():
@@ -48,14 +49,19 @@ class Matrix():
         for row in self.matrix:
             for cell in row:
                 if cell.y == 0 and cell.x in xrange(0,des_cols):
+                    #top row is wall
                     cell.wall = True
                 elif cell.x == 0 and cell.y in xrange(0,des_rows):
+                    #left column is wall
                     cell.wall = True
                 elif cell.y == des_rows-1 and cell.x in xrange(1,des_cols):
+                    #bottom row is wall
                     cell.wall = True
                 elif cell.x == des_cols-1 and cell.y in xrange(1,des_rows):
+                    #right column is wall
                     cell.wall = True
                 elif not any([cell.start,cell.end,cell.wall]) and randint(1,11)>8:
+                    #80% change that not border, white cells, are walls
                     cell.wall = True
                 cell.update()
 
@@ -87,7 +93,7 @@ def onClick(event):
             c.create_rectangle(matrix.end.x*cell_w,matrix.end.y*cell_h,(matrix.end.x+1)*cell_w,(matrix.end.y+1)*cell_h,fill=matrix.end.color)
 
 def check_cell(next_cell):
-    y,x = next_cell.cord()
+    y,x = next_cell.coords()
     if y < 0 or x < 0:
         return False
     if y > len(matrix.matrix)-1 or x > len(max(matrix,key=len))-1:
@@ -96,38 +102,38 @@ def check_cell(next_cell):
         return False
     return True
 
-def neighbor_cords():
+def neighbor_coords():
     for y in xrange(-1,2):
         for x in xrange(-1,2):
-            if not (y,x) == (0,0):
+            if (y,x) != (0,0):
                 yield (y,x)
 
 def get_G(cur_cell,next_cell):
-    cy,cx = cur_cell.cord()
-    ny,nx = next_cell.cord()
-    for dy,dx in neighbor_cords():
-        if (cy+dy == ny and cx+dx == nx):
+    cy,cx = cur_cell.coords()
+    ny,nx = next_cell.coords()
+    for dy,dx in neighbor_coords():
+        if cy+dy == ny and cx+dx == nx:
             return 10 if abs(dy+dx)==1 else 14
 
 def get_H(cur_cell,target_cell):
-    cy,cx = cur_cell.cord()
-    ty,tx = target_cell.cord()
+    cy,cx = cur_cell.coords()
+    ty,tx = target_cell.coords()
     x_diff, y_diff = abs(tx-cx), abs(ty-cy)
     return (x_diff+y_diff)*10
 
 def blocked_corner(cur_cell,neighbor):
-    y,x = cur_cell.cord()
+    y,x = cur_cell.coords()
     if get_G(cur_cell,neighbor) == 14:
-        if  (y-1,x-1) == neighbor.cord():
+        if  (y-1,x-1) == neighbor.coords():
             if matrix[y-1][x].wall and matrix[y][x-1].wall:
                 return True
-        if  (y+1,x-1) == neighbor.cord():
+        if  (y+1,x-1) == neighbor.coords():
             if matrix[y+1][x].wall and matrix[y][x-1].wall:
                 return True
-        if  (y-1,x+1) == neighbor.cord():
+        if  (y-1,x+1) == neighbor.coords():
             if matrix[y-1][x].wall and matrix[y][x+1].wall:
                 return True
-        if  (y+1,x+1) == neighbor.cord():
+        if  (y+1,x+1) == neighbor.coords():
             if matrix[y+1][x].wall and matrix[y][x+1].wall:
                 return True
     return False
@@ -151,7 +157,7 @@ def aStar():
                 break
             for neighbor in cur_cell.neighbors():
                 if check_cell(neighbor) and neighbor not in closed_list:
-                    y,x = neighbor.cord()
+                    y,x = neighbor.coords()
                     if neighbor in open_list:
                         if get_G(cur_cell,neighbor)+cur_cell.parent.G < neighbor.G:
                             neighbor.parent = cur_cell
