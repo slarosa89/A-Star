@@ -90,7 +90,7 @@ def check_cell(next_cell):
     y,x = next_cell.cord()
     if y < 0 or x < 0:
         return False
-    if y > len(matrix.matrix)-1 or x > len(matrix[0])-1:
+    if y > len(matrix.matrix)-1 or x > len(max(matrix,key=len))-1:
         return False
     if matrix[y][x].wall:
         return False
@@ -197,9 +197,9 @@ def slowdown(iterator):
 
 if __name__ == "__main__":
     win_width = 500
-    win_height = 500
+    win_height = 250
     des_cols = 50
-    des_rows = 50
+    des_rows = 25
     
 
     cell_w = win_width/des_cols
