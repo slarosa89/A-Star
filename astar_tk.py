@@ -11,7 +11,6 @@ class Cell():
         self.color = "white"
         self.x = x
         self.y = y
-        self.changed = False
         self.walked_on = False
         self.start = False
         self.end = False
@@ -188,16 +187,14 @@ def draw_path():
 
     for cell in reversed(backwards_path):
         cell.walked_on = True
-        cell.changed = True
         matrix.update()
         for row in matrix:
             for cell in row:
-                if cell.changed:
+                if cell.walked_on:
                     c.create_rectangle(cell.x*cell_w,cell.y*cell_h,(cell.x+1)*cell_w,(cell.y+1)*cell_h,fill=cell.color)
         
 
 if __name__ == "__main__":
-    winning_steps = []
     win_width = 500
     win_height = 500
     des_cols = 50
