@@ -106,17 +106,13 @@ def get_G(cur_cell,next_cell):
     cy,cx = cur_cell.cord()
     ny,nx = next_cell.cord()
     for dy,dx in neighbor_cords():
-        if cy+dy == ny and cx+dx == nx:
-            if abs(dy+dx) == 1:
-                return 10
-            else:
-                return 14
+        if (cy+dy == ny and cx+dx == nx): 
+            return 10 if abs(dy+dx)==1 else 14
 
 def get_H(cur_cell,target_cell):
     cy,cx = cur_cell.cord()
     ty,tx = target_cell.cord()
-    x_diff = abs(tx-cx)
-    y_diff = abs(ty-cy)
+    x_diff, y_diff = abs(tx-cx), abs(ty-cy)
     return (x_diff+y_diff)*10
 
 def blocked_corner(cur_cell,neighbor):
